@@ -1,3 +1,8 @@
+# Ignore files without extensions
+*
+!*/
+!*.*
+
 # Prerequisites
 *.d
 
@@ -36,3 +41,71 @@
 
 # Text files
 *.txt
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that store folder view settings
+Icon?
+._*
+.DS_Store
+
+# Generated files
+*.swp
+*~
+*.tmp
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcworkspace/*.xcworkspacedata
+
+# CocoaPods
+Pods/
+
+# Carthage
+/Carthage/Build
+
+# macOS build
+build/
+DerivedData/
+
+# Backup files
+*.bak
+*.backup
+
+# Archive files
+*.zip
+*.rar
+*.gz
+*.bz2
+*.7z
+
+# Code coverage
+*.gcno
+*.gcda
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/
+
+# CMake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+Makefile
+
+
