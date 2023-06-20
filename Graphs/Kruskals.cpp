@@ -121,16 +121,90 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef vector<string> vs;
 
+class edge{
+    public:
+    int u, v, w;
+
+    edge(int a, int b, int c){
+        u = a;
+        v = b;
+        w = c;
+    }
+};
+
+struct myCmp{
+    bool operator()(edge e1, edge e2){
+        return e1.w < e2.w;
+    }
+};
+
+//DSU stuff:
+int find(int x, vi &parent){
+    if(parent[x] == x){
+        return x;
+    }
+
+    parent[x] = find(parent[x], parent);
+    return parent[x];
+}
+
+void unio(int x, int y, vi &parent, vi &rank){
+    int x_p = find(x, parent);
+    int y_p = find(y, parent);
+
+    if(rank[x_p] < rank[y_p]){
+        parent[x_p] = y_p;
+    }
+    else if(rank[x_p] > rank[y_p]){
+        parent[y_p] = x_p;
+    }
+    else{
+        parent[y_p] = x_p;
+        rank[x_p]++;
+    }
+}
+
+int mst(vector<edge> &graph, int n, int m){
+
+    vi parent(n), rank(n, 0);
+    fo(i, n){
+        parent[i] = i;
+    }
+    int res = 0;
+    fo(i, m){
+        int u = graph[i].u;
+        int v = graph[i].v;
+
+
+        if(find(u, parent) != find(v, parent)){
+            res += graph[i].w;
+            unio(u, v, parent, rank);
+        }
+    }
+
+    return res;
+}
+
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int tc = 1;
-    cin>>tc;
+    int n, m;
+    cin>>n>>m;
+    vector<edge> graph;
 
-    while(tc--){
-        
+    fo(i, m){
+        int x, y, w;
+        cin>>x>>y>>w;
+
+        edge e(x, y, w);
+        graph.pb(e);
     }
+
+    sort(all(graph), myCmp());
+    cout<<mst(graph, n, m)<<"\n";
+
     return 0;
 }
 
