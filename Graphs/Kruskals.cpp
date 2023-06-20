@@ -121,81 +121,16 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef vector<string> vs;
 
-
-//TIME COMPLEXITY: theta(n^2);
-//We can further improve this algorithm by using minHeap data structure and
-//an adjacency list instead of adjacency matrix
-
-int mst(vector<vi> &adj){
-    int key[adj.size()];
-
-    for(int i=1; i<adj.size(); i++){
-        key[i] = INT_MAX;
-    }
-
-    key[1] = 0;
-
-    bool mSet [adj.size()];
-    int res = 0;
-
-    for(int i=1; i<adj.size(); i++){
-        mSet[i] = false;
-    }
-
-    //mSet[1] = true; (this line is wrong!)
-    //mSet[1] = true in the first iteration of the below loop
-    
-    for(int i=1; i<adj.size(); i++){
-        int u = -1;
-        
-        for(int j=1; j<adj.size(); j++){
-            
-            if(!mSet[j] && (u==-1 || key[u] < key[j])){
-                u = j;
-            }
-        }
-
-        mSet[u] = true;
-        res += key[u];
-        for(int j=1; j<adj.size(); j++){
-            if(adj[i][j] && !mSet[j]){
-                key[j] = min(key[j], adj[i][j]); 
-            }
-            
-        }
-
-    }
-
-    return res;
-}
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, m;
-    cin>>n>>m;
+    int tc = 1;
+    cin>>tc;
 
-    vi v(n+1, 0);
-    vector<vi> adj(n+1, v);
-
-    fo(i, m){
-        int x, y, w;
-        cin>>x>>y>>w;
-
-        adj[x][y] = w;
-        adj[y][x] = w;
+    while(tc--){
+        
     }
-
-    cout<<mst(adj)<<endl;
-
     return 0;
 }
 
-/* stuff you should look for
-	* int overflow, array bounds
-	* special cases (n=1?)
-	* do smth instead of nothing and stay organized
-	* WRITE STUFF DOWN
-	* DON'T GET STUCK ON ONE APPROACH
-*/
