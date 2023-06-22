@@ -121,35 +121,63 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef vector<string> vs;
 
+const int mxN = 1e3;
+string s[mxN];
+
+int n, m;
+
+bool dot(int i, int j){
+    return i<n && i>=0 && j>=0 && j<m && s[i][j] == '.';
+}
+
+
+//here in this dfs we do not use a visited array, we just convert
+//every dot we visit into a #, and that's done.
+
+//dfs is not any standard algo, it's just a concept, use your own
+//creativity to use this concept according to the situation.
+
+void dfs(int i, int j){
+    s[i][j] = '#';
+
+    if(dot(i+1, j)){
+        dfs(i+1, j);
+    }
+
+    if(dot(i, j+1)){
+        dfs(i, j+1);
+    }
+
+    if(dot(i-1, j)){
+        dfs(i-1, j);
+    }
+
+    if(dot(i, j-1)){
+        dfs(i, j-1);
+    }
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, m;
     cin>>n>>m;
 
-    vector<vi> adj;
-
-    char inp[n][m];
-
-    fo(i, n){
-        fo(j, m){
-            cin>>inp[i][j];
-        }
+    for(int i=0; i<n; i++){
+        cin>>s[i];
     }
 
-    int e = 0;
-
-    fo(i, n-1){
-        fo(j, m-1){
-            if(inp[i][j] == '.'){
-                e++;
-                if(inp[i+1][j] == '.'){
-                    
-                }
+    int cnt = 0;
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            if(dot(i, j)){
+                dfs(i, j);
+                cnt++;
             }
         }
     }
+
+    cout<<cnt<<"\n";
 
     return 0;
 }
