@@ -129,8 +129,8 @@ ll solve(vi &c, int x){
     }
     tb[0] = 1;
 
-    for(int i=1; i<=x; i++){
-        fo(j, c.size()){
+    fo(j, c.size()){
+        for(int i=1; i<=x; i++){
             if(i >=c[j]){
                 tb[i] += tb[i-c[j]]%MOD;
             }
@@ -141,13 +141,13 @@ ll solve(vi &c, int x){
 }
 
 
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, x;
-    cin>>n>>x;
+    int n, sum;
+
+    cin>>n>>sum;
 
     vi coins(n);
 
@@ -155,7 +155,7 @@ int main(){
         cin>>coins[i];
     }
 
-    cout<<solve(coins, x)<<"\n";
+    cout<<solve(coins, sum)<<"\n";
 
     return 0;
 }

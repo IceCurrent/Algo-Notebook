@@ -121,41 +121,34 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef vector<string> vs;
 
-ll solve(vi &c, int x){
-    ll tb[x+1];
+ll solve(int sum){
+    ll tb[sum+1];
 
-    fo(i, x+1){
+    fo(i, sum+1){
         tb[i] = 0;
     }
+
     tb[0] = 1;
 
-    for(int i=1; i<=x; i++){
-        fo(j, c.size()){
-            if(i >=c[j]){
-                tb[i] += tb[i-c[j]]%MOD;
+    for(int i=1; i<=sum; i++){
+        for(int j=1; j<=6; j++){
+            if(i >= j){
+                tb[i] += tb[i-j]%MOD;
             }
         }
     }
 
-    return tb[x]%MOD;
+    return tb[sum]%MOD;
 }
-
-
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, x;
-    cin>>n>>x;
+    int sum;
+    cin>>sum;
 
-    vi coins(n);
-
-    fo(i, n){
-        cin>>coins[i];
-    }
-
-    cout<<solve(coins, x)<<"\n";
+    cout<<solve(sum)<<"\n";
 
     return 0;
 }

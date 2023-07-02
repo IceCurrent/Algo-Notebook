@@ -125,35 +125,38 @@ typedef vector<string> vs;
 //changing is the sum, the coins array is not changing because 
 //we have infinite supply of each type of coins
 
-int solve(vi &c, int n, int x){
-    vi tb(x+1, INT_MAX);
+int solve(vi c, int x){
+    int tb[x+1];
+
+    
+    const int inf = 1e6+2;
+    fo(i, x+1){
+        tb[i] = inf;
+    }
     tb[0] = 0;
 
-    sort(all(c));
-    reverse(all(c));
-
     for(int i=1; i<=x; i++){
-        for(int j=0; j<c.size(); j++){
-            //tb[i] = INT_MAX;
+        fo(j, c.size()){
             if(i >= c[j]){
-                if(tb[i-c[j]] != INT_MAX){
-                    tb[i] = min(tb[i], 1+tb[i-c[j]]);
-                }
+                tb[i] = min(tb[i], tb[i-c[j]]);
             }
         }
-    }
 
-    if(tb[x] == INT_MAX){
-        tb[x] = -1;
+        tb[i]++;
     }
 
     // fo(i, x+1){
     //     cout<<tb[i]<<" ";
     // }
-    // cout<<endl;
+    // cout<<"\n";
+
+    if(tb[x] >= inf){
+        return -1;
+    }
 
     return tb[x];
 }
+
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -162,21 +165,13 @@ int main(){
     int n, x;
     cin>>n>>x;
 
-    vi c(n);
+    vi coins(n);
 
     fo(i, n){
-        cin>>c[i];
+        cin>>coins[i];
     }
 
-    cout<<solve(c, n, x)<<endl;
+    cout<<solve(coins, x)<<"\n";
 
-    return 0;
+    
 }
-
-/* stuff you should look for
-	* int overflow, array bounds
-	* special cases (n=1?)
-	* do smth instead of nothing and stay organized
-	* WRITE STUFF DOWN
-	* DON'T GET STUCK ON ONE APPROACH
-*/

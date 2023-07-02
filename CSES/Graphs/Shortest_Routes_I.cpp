@@ -50,7 +50,7 @@ using namespace std;
 #define PI 3.1415926535897932384626433832795l 
 const int MAX_N = 1e5 + 5;
 const ll MOD = 1e9 + 7;
-const ll INF = 1e9;
+const ll INF = 1e9+4;
 const ld EPS = 1e-9;
 
 // ----------------------</BITWISE>-------------------------- 
@@ -121,42 +121,81 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef vector<string> vs;
 
-ll solve(vi &c, int x){
-    ll tb[x+1];
+const int mxN = 1e5+2;
+ll n, m;
+ll dist[mxN];
 
-    fo(i, x+1){
-        tb[i] = 0;
+
+void dijkstra(int src, vector<vl> &adj){
+
+    bool explored[mxN];
+    memset(explored, false, sizeof(explored));
+    //initialising dist array:
+    for(int i=1; i<=n; i++){
+        dist[i] = INF;
     }
-    tb[0] = 1;
 
-    for(int i=1; i<=x; i++){
-        fo(j, c.size()){
-            if(i >=c[j]){
-                tb[i] += tb[i-c[j]]%MOD;
+    dist[src] = 0;
+   // priority_queue<pii, vector<pii>, greater<int> > pq (dist+1, dist+n+1);
+
+    for(int k=1; k<n; k++){
+       // pii t = pq.top();
+
+        int u = -1;
+
+        for(int i=1; i<=n; i++){
+            if(!explored[i] && (u == -1 || (dist[i] < dist[u]))){
+                u = i;
+            }   
+        }
+
+        explored[u] = true;
+
+        for(int i=0; i<=n; i++){
+            if(!explored[i] && adj[u][i]){
+                //deb(i); 
+                dist[i] = min(dist[i], dist[u] + adj[u][i]);
+                //deb(dist[i]);
             }
         }
+
     }
 
-    return tb[x]%MOD;
-}
+    
 
+}
 
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n, x;
-    cin>>n>>x;
+    cin>>n>>m;
 
-    vi coins(n);
+    vl x(n+1, 0);
+    vector<vl> adj(n+1, x);
 
-    fo(i, n){
-        cin>>coins[i];
+    fo(i, m){
+        ll u, v, w;
+        cin>>u>>v>>w;
+
+        if(adj[u][v]){
+            adj[u][v] = min(adj[u][v], w);
+        }
+        else{
+            adj[u][v] = w;
+        }
+        
+        
     }
 
-    cout<<solve(coins, x)<<"\n";
+    dijkstra(1, adj);
 
+    for(int i=1; i<=n; i++){
+        cout<<dist[i]<<" ";
+    }
+    cout<<"\n";
+    
     return 0;
 }
 
