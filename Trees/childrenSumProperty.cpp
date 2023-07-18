@@ -9,6 +9,8 @@ struct node{
 
     node(int k){
         key = k;
+        left = NULL;
+        right = NULL;
     }
 };
 
