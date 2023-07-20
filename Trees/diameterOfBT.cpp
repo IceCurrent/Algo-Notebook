@@ -38,6 +38,9 @@ int findMax(int a, int b, int c){
     }
 }
 
+
+// Naive Solution 
+// TIME COMPLEXITY: O(n^2) 
 int diameter(node* root){
 
     if(root == NULL){
@@ -53,6 +56,36 @@ int diameter(node* root){
     }
 
     return findMax(d, diameter(root->left), diameter(root->right));
+}
+
+//Optimised Solution
+//TIME COMPLEXITY: O(n)
+
+// Here we can pre compute the heights and store it in an unordered map
+// but this requires extra space for the map, and an overhead for filling it up with
+// values (i.e it's pre-computation)
+// int diameterOpt(node* root){
+    
+// }
+
+// Most optimised solution:
+// it has no overhead of maps
+// basically here we can find the diameter of the tree while computing the height 
+// of at that node, and use a max variable to store the max diameter
+// SO BASICALLY HERE WE JUST MODIFY THE HEIGHT FUNCTION
+
+int res = 0;
+int height2(node* root){
+    if(root==NULL){
+        return 0;
+    }
+
+    int lh = height2(root->left);
+    int rh = height2(root->right);
+
+    res = max(res, rh+lh+1);
+    return 1 + max(lh, rh);
+    
 }
 
 int main(){
@@ -74,9 +107,11 @@ int main(){
     root->left->right = new node(20);
     root->left->right->right = new node(20);
     root->left->right->right->right = new node(20);
-    
+     
     cout<<diameter(root)<<"\n";
-    //cout<<height(root)<<"\n";
+    height2(root);
+
+    cout<<res<<"\n";
 
     return 0;
 }
