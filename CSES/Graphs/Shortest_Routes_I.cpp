@@ -37,78 +37,8 @@ using namespace std;
 #define S second
 #define pb push_back
 
-
-//remove consecutive duplicate elements from the vector
-#define uniq(v) v.erase(unique(all(v)),v.end())
-
-
 //for debugging (#converts the variable name into string literal)
 #define deb(x) cout<<#x<<"="<<x<<endl
-
-
-
-#define PI 3.1415926535897932384626433832795l 
-const int MAX_N = 1e5 + 5;
-const ll MOD = 1e9 + 7;
-const ll INF = 1e9+4;
-const ld EPS = 1e-9;
-
-// ----------------------</BITWISE>-------------------------- 
-/* a=target variable, b=bit number to act upon 0-n */
-#define BIT_SET(a,b) ((a) |= (1ULL<<(b)))
-#define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
-#define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
-
-// '!!' to make sure this returns 0 or 1
-#define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))
-
-#define BITMASK_SET(x, mask) ((x) |= (mask))
-#define BITMASK_CLEAR(x, mask) ((x) &= (~(mask)))
-#define BITMASK_FLIP(x, mask) ((x) ^= (mask))
-#define BITMASK_CHECK_ALL(x, mask) (!(~(x) & (mask)))
-#define BITMASK_CHECK_ANY(x, mask) ((x) & (mask))
-// ----------------------</BITWISE END>--------------------------
-
-// ----------------------</MATH>---------------------------------
-template<typename T> T gcd(T a, T b){return(b?__gcd(a,b):a);} 
-
-template<typename T> T lcm(T a, T b){return(a*(b/gcd(a,b)));} 
-
-int mul(int a, int b, int c = MOD){ll res=(ll)a*b;
-                         return(res>=c?res%c:res);}
-
-
-//simple exponentiation
-template<typename T>T expo(T e, T n){T x=1,p=e;while(n)
-                         {if(n&1)x=x*p;p=p*p;n>>=1;}return x;} 
-
-//exponentiation but the result is kept in bounds of MOD
-template<typename T>T power(T e, T n, T m = MOD){T x=1,p=e;while(n)
-                      {if(n&1)x=mul(x,p,m);p=mul(p,p,m);n>>=1;}return x;} 
-
-
-template <class T> T absmax(T a, T b)
-{return (abs(a)>abs(b)) ? a : b ;}
-
-/****************** Prime Generator **********************/ 
-
-//generate prime numbers till a
-const int N=1e7+10; int prime[20000010]; 
-bool isprime[N]; int nprime; 
-template <typename T> void Sieve(T a) 
-{nprime = 0;memset(isprime,true,sizeof(isprime));
-isprime[1]=false;for(int i=2;i<N;i++){
-if(isprime[i]){prime[nprime++]=i;for(int j=2;i*j<N;j++)
-isprime[i*j]=false;}}}
-
-
-//returns the number of prime factors of n
-template <typename T> inline T PrimeFactors(T n)
-{ll cnt=0,sum=1;for(int i=0; prime[i]*prime[i]<=n 
-and i<nprime;i++){cnt=0;while(n%prime[i]==0)
-{cnt++;n/=prime[i];}sum*=(cnt+1);}
-if(n>1)sum*=2;return sum;} 
-/****************** Prime Generator End **********************/ 
 
 typedef unordered_set<int> usi;
 typedef unordered_set<ll> usl;
@@ -121,49 +51,50 @@ typedef vector<ll> vl;
 typedef vector<bool> vb;
 typedef vector<string> vs;
 
+int n, m;
 const int mxN = 1e5+2;
-ll n, m;
+vector<pair<ll, int> > adj[mxN];
 ll dist[mxN];
+//bool vis[mxN];
+
+void dijkstra(int src){
+    memset(dist, 0x3f, sizeof(dist));
+    //memset(vis, false, sizeof(mxN));
+    dist[0] = 0;
+    priority_queue<pair<ll, int>, vector<pair<ll, int> >, greater<pair<ll, int> > > pq;
+    // the pairs inside pq are: <cost, vertex>
+    // and since we have used minHeap here, it would be according to the cost value
+    pq.push({0, 0});
+
+    while(!pq.empty()){
+        pair<ll, int> u = pq.top();
+        pq.pop();
+
+        //vis[u.S] = true;
 
 
-void dijkstra(int src, vector<vl> &adj){
-
-    bool explored[mxN];
-    memset(explored, false, sizeof(explored));
-    //initialising dist array:
-    for(int i=1; i<=n; i++){
-        dist[i] = INF;
-    }
-
-    dist[src] = 0;
-   // priority_queue<pii, vector<pii>, greater<int> > pq (dist+1, dist+n+1);
-
-    for(int k=1; k<n; k++){
-       // pii t = pq.top();
-
-        int u = -1;
-
-        for(int i=1; i<=n; i++){
-            if(!explored[i] && (u == -1 || (dist[i] < dist[u]))){
-                u = i;
-            }   
+        // I don't understand this optimization
+        // But this is an extremely important optimization in 
+        // Dijkstra's algorithm
+        if(u.F > dist[u.S]){
+            continue;
         }
 
-        explored[u] = true;
+        for(int i=0; (size_t)i<adj[u.S].size(); i++){
 
-        for(int i=0; i<=n; i++){
-            if(!explored[i] && adj[u][i]){
-                //deb(i); 
-                dist[i] = min(dist[i], dist[u] + adj[u][i]);
-                //deb(dist[i]);
+            ll edgecost = adj[u.S][i].F;
+            int v = adj[u.S][i].S;
+
+
+            if(dist[v] > dist[u.S] + edgecost){
+                dist[v] = dist[u.S] + edgecost;
+                pq.push({dist[v], v});
             }
         }
-
     }
 
-    
-
 }
+
 
 
 int main(){
@@ -172,30 +103,18 @@ int main(){
 
     cin>>n>>m;
 
-    vl x(n+1, 0);
-    vector<vl> adj(n+1, x);
+    for(int i=0; i<m; i++){
+        int u, v, w;
+        cin>>u>>v>>w, --u, --v;
 
-    fo(i, m){
-        ll u, v, w;
-        cin>>u>>v>>w;
-
-        if(adj[u][v]){
-            adj[u][v] = min(adj[u][v], w);
-        }
-        else{
-            adj[u][v] = w;
-        }
-        
-        
+        adj[u].push_back({w, v});
     }
+    
+    dijkstra(0);
 
-    dijkstra(1, adj);
-
-    for(int i=1; i<=n; i++){
+    for(int i=0; i<n; i++){
         cout<<dist[i]<<" ";
     }
     cout<<"\n";
-    
-    return 0;
 }
 

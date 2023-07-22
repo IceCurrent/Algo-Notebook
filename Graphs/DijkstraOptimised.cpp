@@ -12,7 +12,7 @@ int n, m;
 const int mxN = 1e5+3;
 vector<pair<int, int> > adj[mxN];
 int dist[mxN];
-bool finalised[mxN];
+//bool finalised[mxN];
 
 void dijkstra(int src){
     priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
@@ -22,19 +22,31 @@ void dijkstra(int src){
                                     // infinity using memset operation. Because memset assigns each byte
 
     dist[0] = 0;
-    memset(finalised, false, sizeof(finalised));
+    //memset(finalised, false, sizeof(finalised));
 
     while(!pq.empty()){
         pair<int, int> u = pq.top();
         pq.pop();
 
-        finalised[u.S] = true;
+
+
+        //finalised[u.S] = true;
+
+        // most important optimisation in Dijkstra
+        // enables us to not use the finalised array
+
+        if(u.F > dist[u.S]){
+            continue;
+        }
 
         for(int i=0; i<adj[u.S].size(); i++){
-            pair<int, int>  v = adj[u.S][i];
-            if(!finalised[v.S]){
-                dist[v.S] = min(dist[v.S], dist[u.S] + v.F);
-                pq.push({dist[v.S], v.S});
+            int edgecost = adj[u.S][i].F;
+            int v = adj[u.S][i].S;
+
+
+            if(dist[v] > dist[u.S] + edgecost){
+                dist[v] = dist[u.S] + edgecost;
+                pq.push({dist[v], v});
             }   
         }
     }
